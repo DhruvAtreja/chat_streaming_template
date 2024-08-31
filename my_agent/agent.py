@@ -9,7 +9,8 @@ import os
 load_dotenv()
 
 class GraphConfig(TypedDict):
-    model_name: Literal["openai", "anthropic"]
+    model_name: Literal["gpt-4o", "haiku", "gpt-4o-mini", "sonnet-3.5"]
+    system_instructions: str
 
 class AgentWorkflow:
     def __init__(self):
@@ -46,6 +47,7 @@ class AgentWorkflow:
 agent_workflow = AgentWorkflow()
 graph = agent_workflow.compile()
 
+# for local testing
 # if __name__ == "__main__":
 #     graph.invoke({
 #         "messages": [{"role": "user", "content": "What's langchain?"}],

@@ -7,10 +7,15 @@ from my_agent.utils.memory_manager import MemoryManager
 
 @lru_cache(maxsize=4)
 def _get_model(model_name: str):
-    if model_name == "openai":
+
+    if model_name == "gpt-4o":
         model = ChatOpenAI(temperature=0, model_name="gpt-4o")
-    elif model_name == "anthropic":
-        model = ChatAnthropic(temperature=0, model_name="claude-3-sonnet-20240229")
+    elif model_name == "haiku":
+        model = ChatAnthropic(temperature=0, model_name="claude-3-haiku-20240307")
+    elif model_name == "gpt-4o-mini":
+        model = ChatOpenAI(temperature=0, model_name="gpt-4o-mini")
+    elif model_name == "sonnet-3.5":
+        model = ChatAnthropic(temperature=0, model_name="claude-3-5-sonnet-20240620")
     else:
         raise ValueError(f"Unsupported model type: {model_name}")
 
@@ -69,14 +74,13 @@ class PreprocessNode:
 # Update the call_model function to use the updated messages
 def call_model(state, config):
     messages = state["messages"]
-    system_instructions = state["system_instructions"]
+    system_instructions = config.get('configurable', {}).get("system_instructions", None)
 
     system_content = system_prompt
     if system_instructions is not None:
         system_content += system_instructions
     messages = [{"role": "system", "content": system_content}] + messages
-
-    model_name = config.get('configurable', {}).get("model_name", "openai")
+    model_name = config.get('configurable', {}).get("model_name", "gpt-4o-mini")
     model = _get_model(model_name)
     response = model.invoke(messages)
     print(response)
