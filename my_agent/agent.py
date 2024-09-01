@@ -20,13 +20,14 @@ class AgentWorkflow:
         self.setup_edges()
 
     def setup_nodes(self):
-        self.workflow.add_node("preprocess", self.preprocess_message)
+        # self.workflow.add_node("preprocess", self.preprocess_message)
         self.workflow.add_node("agent", call_model)
         self.workflow.add_node("action", tool_node)
-        self.workflow.set_entry_point("preprocess")
+        self.workflow.set_entry_point("agent")
 
     def setup_edges(self):
-        self.workflow.add_edge("preprocess", "agent")
+        # Uncomment this and set the entry point to "preprocess" to add memory to the agent
+        # self.workflow.add_edge("preprocess", "agent")
         self.workflow.add_conditional_edges(
             "agent",
             should_continue,
